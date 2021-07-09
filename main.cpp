@@ -19,7 +19,7 @@ int main(int nargs, char *args[] ) {
     abort();
 
   // Read mesh data using C API call
-  read_data(args[1]);
+  read_data(args[1], 20);
   int nnodes, ncells, npedges;
   int *triangles, *pedges;
   double *x, *y;

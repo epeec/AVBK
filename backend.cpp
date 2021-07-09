@@ -17,11 +17,11 @@
 int __nnodes = 0;
 int __ncells = 0;
 int __npedges = 0;
+int __mcg = 10;
+int __ncommon = 2;
 std::vector<double> __x, __y;
 std::vector<int> __triangles;
 std::vector<int> __pedges;
-int __mcg = 10;
-int __ncommon = 2;
 std::vector<int> __gofs, __gcolour;
 std::vector<int> __epart;
 std::vector<int> __perm;
@@ -82,7 +82,8 @@ T_Real area_triangle(const T_Real x[3], const T_Real y[3], T_Real *const s) {
   return val;
 }
 
-void read_data( char *mesh_filename ) {
+void read_data( char *mesh_filename, const int mcg ) {
+  __mcg = mcg;
   std::string m_mesh_filename(mesh_filename);
   // Open mesh file and create the necessary data for kernel exec
   hsize_t file_dims[10];

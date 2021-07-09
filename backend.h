@@ -3,7 +3,7 @@
 #define __BACKEND_HPP__
 
 extern "C" {
-  void read_data( char *mesh_filename );
+  void read_data( char *mesh_filename, const int mcg );
   void get_data_ptr( int * nnodes,
                      int * ncells,
                      int * npedges,
