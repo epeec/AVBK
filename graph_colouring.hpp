@@ -89,10 +89,8 @@ ColumnLargestFirstOrdering(const std::vector<IntegerT> &m_vi_LeftVertices,
       auto i_Current = m_vi_Edges[j];
       for (auto k = m_vi_LeftVertices[i_Current];
            k < m_vi_LeftVertices[i_Current + 1]; ++k) {
-        // b_visited = visitedAlready ( vi_VistedNodes, m_vi_Edges [k] );
         if (m_vi_Edges[k] != i && vi_Visited[m_vi_Edges[k]] != i) {
           ++i_DegreeCount;
-          // vi_VistedNodes.push_back ( m_vi_Edges [k] );
           vi_Visited[m_vi_Edges[k]] = i;
         }
       }
@@ -108,7 +106,7 @@ ColumnLargestFirstOrdering(const std::vector<IntegerT> &m_vi_LeftVertices,
   if (i_VertexCount < 2)
     m_i_MinimumVertexDegree = i_DegreeCount;
 
-  // take the bucket and place it in the vertexorder
+  // take the bucket and place it in the vertex order
   std::vector<IntegerT> m_vi_OrderedVertices;
   for (auto i = m_i_MaximumVertexDegree; i >= m_i_MinimumVertexDegree; --i) {
     // j = size of the bucket
@@ -150,7 +148,7 @@ bool CheckPartialDistanceTwoRowColoring(
           continue;
         if (m_vi_LeftVertexColors[m_vi_Edges[k]] == m_vi_LeftVertexColors[i]) {
           std::cout << "Left vertices " << i + 1 << " and " << m_vi_Edges[k] + 1
-                    << " (connected by right vectex " << m_vi_Edges[j] + 1
+                    << " (connected by right vertex " << m_vi_Edges[j] + 1
                     << ") have the same color (" << m_vi_LeftVertexColors[i]
                     << ")" << std::endl;
           return false;
@@ -246,8 +244,8 @@ std::vector<IntegerT> ParallelPartialDistanceTwoRowColoring(
            (w < m_vi_LeftVertices[myVertex + 1]) && continueColouring; w++) {
         // Algo 4 - Line 14: if color [v] = color [w] and f (v) > f (w) then .
         // NOTE: !!! Not needed Algo 4 - Line 15: add [v] to R ; break . NOTE:
-        // !!! Not needed Algo 4 - Line 16: for each vertex x in adj (w) and v !=
-        // x do
+        // !!! Not needed Algo 4 - Line 16: for each vertex x in adj (w) and v
+        // != x do
         for (auto x = m_vi_RightVertices[m_vi_Edges[w]];
              x < m_vi_RightVertices[m_vi_Edges[w] + 1]; x++) {
           // Algo 4 - Line 17: if color [v] = color [x] and f (v) > f (x) then
