@@ -274,7 +274,7 @@ ParallelPartialDistanceTwoRowColoring
 }
 
 /**
- *
+ * @brief Do the partial-distance-2 row colouring of the Bipartite graph
  * @tparam IntegerT
  * @param m_vi_LeftVertices
  * @param m_vi_RightVertices
@@ -292,7 +292,7 @@ PartialDistanceTwoRowColoring
   std::vector<IntegerT> m_vi_LeftVertexColors(i_LeftVertexCount, NOT_ASSIGNED);
   std::vector<IntegerT> vi_forbiddenColors(i_LeftVertexCount, NOT_ASSIGNED);
   auto m_vi_OrderedVertices = std::move(RowNaturalOrdering(i_LeftVertexCount));
-  
+
   auto m_i_LeftVertexColorCount = 0;
   for (auto i = 0; i < i_LeftVertexCount; ++i) {
     auto i_CurrentVertex = m_vi_OrderedVertices[i];
@@ -320,7 +320,7 @@ PartialDistanceTwoRowColoring
 }
 
 /**
- *
+ * @brief Do the partial-distance-2 column colouring of the Bipartite graph
  * @tparam IntegerT
  * @param m_vi_LeftVertices
  * @param m_vi_RightVertices
@@ -364,7 +364,7 @@ PartialDistanceTwoColumnColoring
 }
 
 /**
- *
+ * @brief Check the distance-2 colouring of the Bipartite graph
  * @tparam IntegerT
  * @param m_vi_LeftVertices
  * @param m_vi_RightVertices
@@ -400,7 +400,7 @@ bool CheckPartialDistanceTwoColumnColoring
 }
 
 /**
- *
+ * @brief Convert a CSR graph to Bipartite graph
  * @tparam IntegerT
  * @param ip_RowIndex
  * @param i_RowCount

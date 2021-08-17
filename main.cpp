@@ -1,6 +1,7 @@
 /*
- * @file main.cpp
- * @brief Gather-Scatter Mini-App
+ *  @file main.cpp
+ *  @brief Gather-Scatter Mini-App
+ *  @author Pavanakumar Mohanamuraly
  */
 #include "backend.h"
 #include "kernel.h"

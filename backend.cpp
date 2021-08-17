@@ -1,10 +1,7 @@
 /*
- * Gather-Scatter Mini-App
- * To compile : g++ -I.
- * -I/Users/mohanamuraly/NutsCFD_sandbox/NutsCFD/external/DIST/include
- *                  -L/Users/mohanamuraly/NutsCFD_sandbox/NutsCFD/external/DIST/lib
- * main.cpp -std=c++11 -lhdf5
- *
+ *  @file backend.cpp
+ *  @brief The backend for setting up the data for the kernel
+ *  @author Pavanakumar Mohanamuraly
  */
 
 #include <cassert>

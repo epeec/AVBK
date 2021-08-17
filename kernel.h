@@ -3,7 +3,7 @@
 #define KERNEL_H
 
 /**
- *
+ * @brief Calculate the area of the triangle given the three vertices
  * @param x
  * @param y
  * @param s
@@ -49,7 +49,7 @@ void element_volumes(const int ncells, const double *const x,
 }
 
 /**
- *
+ * @brief Apply the periodic BC for nodal residue (using work array)
  * @param npedges
  * @param pedges
  * @param pwork
