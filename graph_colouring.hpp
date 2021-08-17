@@ -413,11 +413,11 @@ bool CheckPartialDistanceTwoColumnColoring(
  */
 template <typename IntegerT>
 std::tuple<std::vector<IntegerT>, std::vector<IntegerT>, std::vector<IntegerT>>
-BuildBPGraphFromCSRFormat(const IntegerT *const ip_RowIndex,
-                          const IntegerT i_RowCount,
-                          const IntegerT i_ColumnCount,
-                          const IntegerT *const ip_ColumnIndex,
-                          const IntegerT i_Start = 0) {
+BuildBPGraphFromCSRGraph(const IntegerT *const ip_RowIndex,
+                         const IntegerT i_RowCount,
+                         const IntegerT i_ColumnCount,
+                         const IntegerT *const ip_ColumnIndex,
+                         const IntegerT i_Start = 0) {
 
   std::map<IntegerT, std::vector<IntegerT>> colList;
   std::vector<IntegerT> m_vi_LeftVertices;

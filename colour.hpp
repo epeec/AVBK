@@ -83,7 +83,8 @@ int colour_api_call1(
     // std::cerr << "nn = " << ne << "\n";
     // std::cerr << "eptr[0-1] = " << eptr[0] << ", " << eptr[1] << "\n";
     // std::cerr << "eind[0-2] = " << eind[0] << ", " << eind[1] << ", " <<
-    // eind[2] << "\n"; std::cerr << "epart[0] = " << epart[0] << "\n"; std::cerr
+    // eind[2] << "\n"; std::cerr << "epart[0] = " << epart[0] << "\n";
+    // std::cerr
     // << "perm[0] = " << perm[0] << "\n";
 
     auto metis_ret = METIS_PartMeshDual(
@@ -142,7 +143,7 @@ int colour_api_call1(
   {
     std::vector<int32_t> left, right, edges;
     std::tie(left, right, edges) =
-        BuildBPGraphFromCSRFormat(&cg_xadj[0], mcg, mcg, &cg_adjncy[0]);
+        BuildBPGraphFromCSRGraph(&cg_xadj[0], mcg, mcg, &cg_adjncy[0]);
     cg_colour = std::move(PartialDistanceTwoColumnColoring(left, right, edges));
     CheckPartialDistanceTwoColumnColoring(left, right, edges, cg_colour);
   }
