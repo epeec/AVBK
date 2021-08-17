@@ -14,6 +14,12 @@
 #define TREEPART_GRAPH_COLOURING_HPP
 #define NOT_ASSIGNED -1
 
+/**
+ *
+ * @tparam IntegerT
+ * @param in
+ * @return
+ */
 template<typename IntegerT>
 static inline IntegerT
 down_by_one
@@ -21,6 +27,12 @@ down_by_one
   return in - 1;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param i_LeftVertexCount
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 RowNaturalOrdering
@@ -32,6 +44,13 @@ RowNaturalOrdering
   return m_vi_OrderedVertices;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param i_LeftVertexCount
+ * @param i_RightVertexCount
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 ColumnNaturalOrdering
@@ -45,7 +64,14 @@ ColumnNaturalOrdering
   return m_vi_OrderedVertices;
 }
 
-
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 ColumnLargestFirstOrdering
@@ -103,6 +129,15 @@ ColumnLargestFirstOrdering
   return m_vi_OrderedVertices;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @param m_vi_LeftVertexColors
+ * @return
+ */
 template<typename IntegerT>
 bool
 CheckPartialDistanceTwoRowColoring
@@ -131,11 +166,25 @@ CheckPartialDistanceTwoRowColoring
   return true;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param x
+ * @return
+ */
 template<typename IntegerT>
 IntegerT
 foobar
   (const IntegerT x) { return x; }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 ParallelPartialDistanceTwoRowColoring
@@ -224,6 +273,14 @@ ParallelPartialDistanceTwoRowColoring
   return m_vi_LeftVertexColors;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 PartialDistanceTwoRowColoring
@@ -262,7 +319,14 @@ PartialDistanceTwoRowColoring
   return m_vi_LeftVertexColors;
 }
 
-
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @return
+ */
 template<typename IntegerT>
 std::vector<IntegerT>
 PartialDistanceTwoColumnColoring
@@ -299,6 +363,15 @@ PartialDistanceTwoColumnColoring
   return m_vi_RightVertexColors;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @param m_vi_RightVertexColors
+ * @return
+ */
 template<typename IntegerT>
 bool CheckPartialDistanceTwoColumnColoring
   (const std::vector<IntegerT> &m_vi_LeftVertices,
@@ -326,6 +399,16 @@ bool CheckPartialDistanceTwoColumnColoring
   return true;
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param ip_RowIndex
+ * @param i_RowCount
+ * @param i_ColumnCount
+ * @param ip_ColumnIndex
+ * @param i_Start
+ * @return
+ */
 template<typename IntegerT>
 std::tuple< std::vector<IntegerT>, std::vector<IntegerT>, std::vector<IntegerT> >
 BuildBPGraphFromCSRFormat(const IntegerT *const ip_RowIndex,
@@ -366,6 +449,14 @@ BuildBPGraphFromCSRFormat(const IntegerT *const ip_RowIndex,
                          std::move(m_vi_Edges));
 }
 
+/**
+ *
+ * @tparam IntegerT
+ * @param m_vi_LeftVertices
+ * @param m_vi_RightVertices
+ * @param m_vi_Edges
+ * @return
+ */
 template<typename IntegerT>
 std::tuple<IntegerT, IntegerT, IntegerT, IntegerT, IntegerT, IntegerT>
 CalculateVertexDegrees

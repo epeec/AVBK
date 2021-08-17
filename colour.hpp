@@ -18,6 +18,9 @@
 #include <set>
 #include <fstream>
 
+/**
+ *
+ */
 extern "C" {
 void colour_api_call
 (
@@ -180,9 +183,20 @@ int colour_api_call1
   return 0;
 }
 
-/*
+/**
  *
-*/
+ * @param nn
+ * @param ne
+ * @param mcg
+ * @param x
+ * @param y
+ * @param z
+ * @param eptr
+ * @param eind
+ * @param gofs
+ * @param gcolour
+ * @param perm
+ */
 void write_colour
 (
   int32_t nn,
@@ -234,10 +248,22 @@ void write_colour
   }
 }
 
-
+/**
+ *
+ * @param nn
+ * @param ne
+ * @param mcg
+ * @param ncommon
+ * @param eptr
+ * @param eind
+ * @param gofs
+ * @param gcolour
+ * @param epart
+ * @param perm
+ * @param ierr
+ */
 void colour_api_call
 (
-    
   int32_t * nn,      /* number of nodes */
   int32_t * ne,      /* number of elements */
   int32_t * mcg,     /* number of element groups */
