@@ -1,0 +1,81 @@
+
+  FIND_PATH (METIS_INCLUDE_DIR 
+  NAMES metis.h
+  HINTS "${CMAKE_SOURCE_DIR}/external/DIST" ENV METIS_DIR ENV METIS_ROOT
+  PATH_SUFFIXES "include" 
+  DOC "Directory where the METIS header files are located"
+  NO_DEFAULT_PATH
+  NO_CMAKE_PATH
+  NO_CMAKE_ENVIRONMENT_PATH
+  NO_SYSTEM_ENVIRONMENT_PATH
+  NO_CMAKE_SYSTEM_PATH
+  NO_PACKAGE_ROOT_PATH )
+
+  FIND_LIBRARY (METIS_LIBRARY
+  NAMES libmetis.a metis metis${METIS_LIB_SUFFIX}
+  HINTS "${CMAKE_SOURCE_DIR}/external/DIST" ENV METIS_DIR ENV METIS_ROOT
+  PATH_SUFFIXES "lib"
+  DOC "Directory where the METIS library is located"
+  NO_DEFAULT_PATH
+  NO_CMAKE_PATH
+  NO_CMAKE_ENVIRONMENT_PATH
+  NO_SYSTEM_ENVIRONMENT_PATH
+  NO_CMAKE_SYSTEM_PATH
+  NO_PACKAGE_ROOT_PATH )
+
+# Get METIS version
+IF (NOT METIS_VERSION_STRING AND METIS_INCLUDE_DIR AND EXISTS "${METIS_INCLUDE_DIR}/metis.h")
+  SET (version_pattern "^#define[\t ]+METIS_(MAJOR|MINOR)_VERSION[\t ]+([0-9\\.]+)$")
+  FILE (STRINGS "${METIS_INCLUDE_DIR}/metis.h" metis_version REGEX ${version_pattern})
+
+  FOREACH (match ${metis_version})
+    IF (METIS_VERSION_STRING)
+      SET (METIS_VERSION_STRING "${METIS_VERSION_STRING}.")
+    ENDIF ()
+    STRING (REGEX REPLACE ${version_pattern} "${METIS_VERSION_STRING}\\2" METIS_VERSION_STRING ${match})
+    SET (METIS_VERSION_${CMAKE_MATCH_1} ${CMAKE_MATCH_2})
+  ENDFOREACH ()
+  UNSET (metis_version)
+  UNSET (version_pattern)
+ENDIF ()
+
+# Try compiling and running test program
+IF (METIS_INCLUDE_DIR AND METIS_LIBRARY)
+
+  # Set flags for building test program
+  SET (CMAKE_REQUIRED_INCLUDES ${METIS_INCLUDE_DIR})
+  SET (CMAKE_REQUIRED_LIBRARIES ${METIS_LIBRARY})
+
+  # Build and run test program
+  INCLUDE (CheckCSourceRuns)
+  CHECK_C_SOURCE_RUNS ("
+#define METIS_EXPORT
+#include \"metis.h\"
+int main( int argc, char* argv[] )
+{
+  // FIXME: Find a simple but sensible test for METIS
+  return 0;
+}
+" METIS_TEST_RUNS)
+
+  UNSET (CMAKE_REQUIRED_INCLUDES)
+  UNSET (CMAKE_REQUIRED_LIBRARIES)
+ENDIF ()
+
+# Standard package handling
+INCLUDE (FindPackageHandleStandardArgs)
+IF (CMAKE_VERSION VERSION_GREATER 2.8.2)
+  FIND_PACKAGE_HANDLE_STANDARD_ARGS (METIS
+                                     REQUIRED_VARS METIS_LIBRARY METIS_INCLUDE_DIR METIS_TEST_RUNS
+                                     VERSION_VAR METIS_VERSION_STRING)
+ELSE ()
+  FIND_PACKAGE_HANDLE_STANDARD_ARGS (METIS
+                                     REQUIRED_VARS METIS_LIBRARY METIS_INCLUDE_DIR METIS_TEST_RUNS)
+ENDIF ()
+
+IF (METIS_FOUND)
+  SET (METIS_LIBRARIES ${METIS_LIBRARY})
+  SET (METIS_INCLUDE_DIRS ${METIS_INCLUDE_DIR})
+ENDIF ()
+
+MARK_AS_ADVANCED (METIS_INCLUDE_DIR METIS_LIBRARY)

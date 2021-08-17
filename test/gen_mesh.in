@@ -1,0 +1,7 @@
+ge 0 0 1 1 10 10
+copy q2t
+set bc-type bottom_y_eq_0 l00
+set bc-type right_x_eq_1  u01
+set bc-type top_y_eq_1    u00
+set bc-type left_x_eq_0   l01
+wr hd my_mesh

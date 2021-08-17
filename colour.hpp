@@ -5,6 +5,10 @@
  *  @author Pavanakumar Mohanamuraly
 */
 
+#ifndef COLOUR_HPP
+
+#define COLOUR_HPP
+
 #include "graph_colouring.hpp"
 #include <metis.h>
 #include <vector>
@@ -250,3 +254,4 @@ void colour_api_call
   *ierr = colour_api_call1( *nn, *ne, *mcg, *ncommon, eptr, eind, gofs, gcolour, epart, perm );
 }
 
+#endif
