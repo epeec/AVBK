@@ -233,7 +233,7 @@ void ReorderNodesByGroup() {
     }
   }
   std::cout << "Total nodes in mesh " << __nnodes << " total nodes in hash "
-            << count - 1 << "\n";
+            << count << "\n";
   // Renumber the triangle node-ids
   for (unsigned i = 0; i < __nnodes; ++i)
     __node_inv_perm[__node_perm[i]] = i;
