@@ -1,7 +1,7 @@
 
   FIND_PATH (METIS_INCLUDE_DIR 
   NAMES metis.h
-  HINTS "${CMAKE_SOURCE_DIR}/external/DIST" ENV METIS_DIR ENV METIS_ROOT
+  HINTS ENV METIS_DIR ENV METIS_ROOT
   PATH_SUFFIXES "include" 
   DOC "Directory where the METIS header files are located"
   NO_DEFAULT_PATH
@@ -13,7 +13,7 @@
 
   FIND_LIBRARY (METIS_LIBRARY
   NAMES libmetis.a metis metis${METIS_LIB_SUFFIX}
-  HINTS "${CMAKE_SOURCE_DIR}/external/DIST" ENV METIS_DIR ENV METIS_ROOT
+  HINTS ENV METIS_DIR ENV METIS_ROOT
   PATH_SUFFIXES "lib"
   DOC "Directory where the METIS library is located"
   NO_DEFAULT_PATH
