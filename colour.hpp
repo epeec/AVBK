@@ -74,11 +74,13 @@ int colour_api_call1(
   options[METIS_OPTION_UFACTOR] = 1;   // 1% load imbalance
 
   // Allocate the part arrays
-  // std::cerr << "Number of cell groups " << mcg << "\n";
   // Call METIS to form the groups of cells
   {
     int32_t objval;
     std::vector<int32_t> npart(nn);
+
+#if 0
+    // std::cerr << "Number of cell groups " << mcg << "\n";
     // std::cerr << "ne = " << ne << "\n";
     // std::cerr << "nn = " << ne << "\n";
     // std::cerr << "eptr[0-1] = " << eptr[0] << ", " << eptr[1] << "\n";
@@ -86,6 +88,7 @@ int colour_api_call1(
     // eind[2] << "\n"; std::cerr << "epart[0] = " << epart[0] << "\n";
     // std::cerr
     // << "perm[0] = " << perm[0] << "\n";
+#endif
 
     auto metis_ret = METIS_PartMeshDual(
         const_cast<int32_t *>(&ne), const_cast<int32_t *>(&nn),
@@ -175,11 +178,23 @@ int colour_api_call1(
   gofs[mcg] = ne + 1;
 
   std::sort(epart, epart + ne);
-  return 0;
+
+  // Find the maximum size of a group
+  unsigned max_group_size = 0;
+  for (int32_t i = 0; i < mcg; ++i) {
+    auto my_size = gofs[i + 1] - gofs[i];
+#if 0
+    std::cout << "Group-ID " << i << " cells in group " << my_size << "\n";
+#endif
+    if (my_size > max_group_size)
+      max_group_size = my_size;
+  }
+  std::cout << "Maximum cells in group = " << max_group_size << "\n";
+  return max_group_size;
 }
 
 /**
- *
+ * @brief Write the colour output for viewing in paraview
  * @param nn
  * @param ne
  * @param mcg

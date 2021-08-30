@@ -425,7 +425,7 @@ BuildBPGraphFromCSRGraph(const IntegerT *const ip_RowIndex,
   std::vector<IntegerT> m_vi_RightVertices;
   m_vi_RightVertices.reserve(i_RowCount + 1);
   std::vector<IntegerT> m_vi_Edges;
-  m_vi_Edges.reserve(2 * ip_RowIndex[i_RowCount]);
+  m_vi_Edges.reserve(2 * (ip_RowIndex[i_RowCount] - i_Start));
 
   m_vi_LeftVertices.push_back(0);
   for (IntegerT i = 0; i < i_RowCount; i++) {

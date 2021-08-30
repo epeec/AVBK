@@ -19,10 +19,14 @@ int __ncells = 0;
 int __npedges = 0;
 int __mcg = 10;
 int __ncommon = 2;
+int __max_cells_ingroup = 0;
+int __ngcolours = 0;
+
 std::vector<double> __x, __y;
 std::vector<int> __triangles;
 std::vector<int> __pedges;
 std::vector<int> __gofs, __gcolour;
+std::vector<int> __cgofs, __cgroup;
 std::vector<int> __epart;
 std::vector<int> __perm;
 std::vector<int> __eptr;
@@ -173,19 +177,55 @@ void read_data(char *mesh_filename, const int mcg) {
                   __gcolour.data(),   /* colour */
                   __epart.data(),     /* part array */
                   __perm.data(), /* permutation of the elements (size of ne) */
-                  &ierr          /* Error code */
+                  &__max_cells_ingroup /* Max cells in a group */
   );
 
-#if 1
+#if 0
   // Write output of colours for plotting
   write_colour(__nnodes, __ncells, __mcg, __x.data(), __y.data(), nullptr,
                __eptr.data(), __triangles.data(), __gofs.data(),
                __gcolour.data(), __perm.data());
 #endif
 
+#if 0
+  for (const auto &item : __gcolour)
+    std::cout << "colour " << item << "\n";
+#endif
+
+  // Form the colour groups and offsets
+  __ngcolours = *(std::max_element(__gcolour.begin(), __gcolour.end())) + 1;
+  __cgofs.resize(__ngcolours + 1);
+  __cgroup.resize(__mcg);
+
+  unsigned j = 0;
+  for (unsigned kcolour = 0; kcolour < __ngcolours; ++kcolour) {
+    for (unsigned kgroup = 0; kgroup < __mcg; ++kgroup) {
+      if (__gcolour[kgroup] == kcolour) {
+        __cgroup[j] = kgroup;
+        ++__cgofs[kcolour + 1];
+        ++j;
+      }
+    }
+  }
+  for (unsigned kcolour = 1; kcolour < __ngcolours + 1; ++kcolour)
+    __cgofs[kcolour] += __cgofs[kcolour - 1];
+
+#if 0
+  for (unsigned kcolour = 0; kcolour < __ngcolours; ++kcolour) {
+    std::cout << "colour " << kcolour << " begin " << __cgofs[kcolour]
+              << " end " << __cgofs[kcolour + 1] << "\n";
+    for (unsigned k = __cgofs[kcolour]; k < __cgofs[kcolour + 1]; ++k) {
+      unsigned kgroup = __cgroup[k];
+      std::cout << "group " << kgroup << "\n";
+    }
+  }
+#endif
+
   for (auto &item : __triangles)
     --item;
   for (auto &item : __pedges)
+    --item;
+  for (auto &item : __gofs)
     --item;
 }
 
@@ -199,11 +239,19 @@ void read_data(char *mesh_filename, const int mcg) {
  * @param triangles
  * @param pedges
  */
-void get_data_ptr(int *nnodes, int *ncells, int *npedges, double **x,
-                  double **y, int **triangles, int **pedges) {
+void get_data_ptr(int *nnodes, int *ncells, int *npedges, int *ncolours,
+                  int *maxgsize, double **x, double **y, int **group_offset,
+                  int **group, int **cgroup_offset, int **cgroup,
+                  int **triangles, int **pedges) {
   *nnodes = __nnodes;
   *ncells = __ncells;
   *npedges = __npedges;
+  *ncolours = __ngcolours;
+  *maxgsize = __max_cells_ingroup;
+  *group_offset = __gofs.data();
+  *group = __perm.data();
+  *cgroup_offset = __cgofs.data();
+  *cgroup = __cgroup.data();
   *x = __x.data();
   *y = __y.data();
   *triangles = __triangles.data();

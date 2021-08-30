@@ -20,8 +20,10 @@ void read_data(char *mesh_filename, const int mcg);
  * @param triangles
  * @param pedges
  */
-void get_data_ptr(int *nnodes, int *ncells, int *npedges, double **x,
-                  double **y, int **triangles, int **pedges);
+void get_data_ptr(int *nnodes, int *ncells, int *npedges, int *ncolours,
+                  int *maxgsize, double **x, double **y, int **group_offset,
+                  int **group, int **cgroup_offset, int **cgroup,
+                  int **triangles, int **pedges);
 void free_data();
 }
 
