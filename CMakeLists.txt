@@ -12,21 +12,25 @@ find_package (METIS REQUIRED)
 find_package(OpenMP)
 find_package(OmpSs)
 
-include_directories (.)
+## ASAN is disabled by default enable if needed but
+## incompatible with OmpSs (use with care)
+set (DISABLE_ASAN TRUE)
+include (CheckCXXCompilerFlag)
+set (CMAKE_REQUIRED_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
+CHECK_CXX_COMPILER_FLAG ("-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer" HAVE_FLAG_SANITIZE_ADDRESS)
+unset (CMAKE_REQUIRED_FLAGS)
+if (HAVE_FLAG_SANITIZE_ADDRESS)
+  set (ASAN_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
+else ()
+  set(ASAN_FLAGS)
+  message(WARNING "ASAN not found cannot check for memory leaks in debug mode!")
+endif (HAVE_FLAG_SANITIZE_ADDRESS)
 
-### ASAN settings
-#include (CheckCXXCompilerFlag)
-#set (CMAKE_REQUIRED_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
-#CHECK_CXX_COMPILER_FLAG ("-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer" HAVE_FLAG_SANITIZE_ADDRESS)
-#unset (CMAKE_REQUIRED_FLAGS)
-#if (HAVE_FLAG_SANITIZE_ADDRESS)
-#  set (ASAN_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
-#else ()
-#  set(ASAN_FLAGS)
-#  message(WARNING "ASAN not found cannot check for memory leaks in debug mode!")
-#endif (HAVE_FLAG_SANITIZE_ADDRESS)
-
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ASAN_FLAGS} ${OpenMP_C_FLAGS} -O2")
+if (HAVE_FLAG_SANITIZE_ADDRESS AND NOT DISABLE_ASAN)
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ASAN_FLAGS} ${OpenMP_C_FLAGS} -O2")
+else()
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_C_FLAGS} -O2")
+endif()
 
 add_library(backend STATIC
    backend.cpp)
@@ -46,7 +50,7 @@ add_executable(main_openmp
 target_link_libraries (main_openmp PUBLIC
    backend)
 
-if(OMPSS_FOUND)
+if(OMPSS_FOUND AND DISABLE_ASAN)
 
   set (OMPSS_MAIN_SOURCE "${PROJECT_SOURCE_DIR}/ompss_main.cpp")
   set (OMPSS_KERNEL_SOURCE "${PROJECT_SOURCE_DIR}/kernel_ompss.h")
