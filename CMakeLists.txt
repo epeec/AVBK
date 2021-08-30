@@ -51,7 +51,7 @@ if(OMPSS_FOUND)
   set (OMPSS_MAIN_SOURCE "${PROJECT_SOURCE_DIR}/ompss_main.cpp")
   set (OMPSS_KERNEL_SOURCE "${PROJECT_SOURCE_DIR}/kernel_ompss.h")
 
-  add_custom_target( ompss_main ALL
+  add_custom_target( ompss ALL
      DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ompss_main"
   )
 
