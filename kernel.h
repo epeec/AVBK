@@ -112,7 +112,7 @@ void free_work_groups() {
 
 /**
  *
- * @param ncells
+ * @param nnodes
  * @param ncolours
  * @param group_offset
  * @param group
@@ -124,25 +124,33 @@ void free_work_groups() {
  * @param vol_e
  * @param vol_n
  */
-void element_volumes_cgroup(int ncells, int ncolours, const int *group_offset,
-                            const int *group, const int *cgroup_offset,
-                            const int *cgroup, const double *x, const double *y,
+void element_volumes_cgroup(int nnodes, int ncolours, const int *group_offset,
+                            const int *cgroup_offset, const int *cgroup,
+                            const double *x, const double *y,
                             const int *triangles, double *vol_e,
                             double *vol_n) {
-#pragma omp parallel shared(ncolours, group, group_offset, cgroup,             \
+#pragma omp parallel shared(nnodes, ncolours, group_offset, cgroup,            \
                             cgroup_offset, triangles, x, y, vol_e,             \
                             vol_n) default(none)
   {
-#if 1
+#if 0
     int tid = omp_get_thread_num();
     std::ofstream fout("thread_" + std::to_string(tid) + ".dat");
     fout << "ncolours = " << ncolours << "\n";
 #endif
+
+    // Zero-out the values
+#pragma omp for
+    for (unsigned i = 0; i < nnodes; ++i)
+      vol_n[i] = 0.0;
+
     // Loop over all colours
     for (unsigned kcolour = 0; kcolour < ncolours; ++kcolour) {
+#if 0
       fout << "In colour " << kcolour << " cgroup_offset[kcolour] "
            << cgroup_offset[kcolour] << " cgroup_offset[kcolour + 1] "
            << cgroup_offset[kcolour + 1] << "\n";
+#endif
 #pragma omp for
       for (unsigned k = cgroup_offset[kcolour]; k < cgroup_offset[kcolour + 1];
            ++k) { // Loop over groups of the same colour (can be run on multiple
@@ -151,8 +159,10 @@ void element_volumes_cgroup(int ncells, int ncolours, const int *group_offset,
         unsigned ibeg = group_offset[kgroup];
         unsigned iend = group_offset[kgroup + 1];
         unsigned isize = iend - ibeg;
+#if 0
         fout << "In group " << kgroup << " ibeg " << ibeg << " iend " << iend
              << " isize " << isize << "\n";
+#endif
         // gather data at nodes
         for (unsigned i = ibeg; i < iend; ++i) {
 #if 0
@@ -174,7 +184,9 @@ void element_volumes_cgroup(int ncells, int ncolours, const int *group_offset,
           const double fac = 1.0e0 / 3.0e0;
           const double *const x_ptr = &work_x[3 * i];
           const double *const y_ptr = &work_y[3 * i];
+#if 0
           fout << *x_ptr << ", " << *y_ptr << "\n";
+#endif
           double *const s = &work_scatter[3 * i];
           const double val = 0.5 * (x_ptr[0] * y_ptr[1] - x_ptr[1] * y_ptr[0] +
                                     x_ptr[1] * y_ptr[2] - x_ptr[2] * y_ptr[1] +
@@ -208,6 +220,8 @@ void apply_periodic_bc(const int npedges, const int *const pedges,
                        double *const pwork, double *const res) {
   unsigned ibc_start = 0;
   unsigned ibc_end = 2 * npedges - 1;
+  for (unsigned i = 0; i < 2 * npedges; ++i)
+    pwork[i] = 0.0;
   for (unsigned i = 0; i < npedges; ++i) {
     const unsigned i1 = pedges[ibc_start];
     const unsigned i2 = pedges[ibc_end];

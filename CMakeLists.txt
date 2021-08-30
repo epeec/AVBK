@@ -12,22 +12,20 @@ find_package (METIS REQUIRED)
 find_package(OpenMP)
 
 include_directories (.)
+
+## ASAN settings
 include (CheckCXXCompilerFlag)
 set (CMAKE_REQUIRED_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
 CHECK_CXX_COMPILER_FLAG ("-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer" HAVE_FLAG_SANITIZE_ADDRESS)
-#set (CMAKE_REQUIRED_FLAGS "-fsanitize=thread -fopenmp -fno-omit-frame-pointer")
-#CHECK_CXX_COMPILER_FLAG ("-fsanitize=thread -fopenmp -fno-omit-frame-pointer" HAVE_FLAG_SANITIZE_ADDRESS)
 unset (CMAKE_REQUIRED_FLAGS)
-
 if (HAVE_FLAG_SANITIZE_ADDRESS)
   set (ASAN_FLAGS "-fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer")
-#set(ASAN_FLAGS "-fsanitize=thread -fopenmp -fno-omit-frame-pointer")
 else ()
   set(ASAN_FLAGS)
   message(WARNING "ASAN not found cannot check for memory leaks in debug mode!")
 endif (HAVE_FLAG_SANITIZE_ADDRESS)
 
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ASAN_FLAGS} ${OpenMP_C_FLAGS}")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ASAN_FLAGS} ${OpenMP_C_FLAGS} -O2")
 
 add_executable(gs_ompss
    backend.cpp
