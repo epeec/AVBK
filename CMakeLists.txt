@@ -53,22 +53,41 @@ target_link_libraries (main_openmp PUBLIC
 if(OMPSS_FOUND AND DISABLE_ASAN)
 
   set (OMPSS_MAIN_SOURCE "${PROJECT_SOURCE_DIR}/ompss_main.cpp")
-  set (OMPSS_KERNEL_SOURCE "${PROJECT_SOURCE_DIR}/kernel_ompss.h")
+  set (OMPSS_KERNEL_SOURCE "${PROJECT_SOURCE_DIR}/kernel_ompss.cpp")
+  set (OMPSS_KERNEL_HEADER "${PROJECT_SOURCE_DIR}/kernel_ompss.h")
 
-  add_custom_target( ompss ALL
-     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ompss_main"
+
+  ## OMPSS MAIN EXE
+  add_custom_target( ompss_main ALL
+     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o" "${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o"
+     COMMAND ${OMPSS_CXX} ${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o ${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o
+             -o ${CMAKE_CURRENT_BINARY_DIR}/ompss_main
+             -L${CMAKE_CURRENT_BINARY_DIR} -lbackend ${METIS_LIBRARY}
+             ${HDF5_LIBRARIES} -l${CMAKE_DL_LIBS}
+     WORKING_DIRECTORY
+       ${PROJECT_SOURCE_DIR}
   )
 
-  ## OMPSS
+  ## OMPSS MAIN OBJECT
   add_custom_command(
-     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/ompss_main"
+     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o"
      COMMAND
-       ${OMPSS_CXX} -I${PROJECT_SOURCE_DIR} ${OMPSS_MAIN_SOURCE}
-       -o ${CMAKE_CURRENT_BINARY_DIR}/ompss_main
-       -L${CMAKE_CURRENT_BINARY_DIR} -lbackend ${METIS_LIBRARY}
-       ${HDF5_LIBRARIES} -l${CMAKE_DL_LIBS}
+       ${CMAKE_CXX_COMPILER} -g -O2 -c -I${PROJECT_SOURCE_DIR} ${OMPSS_MAIN_SOURCE}
+       -o ${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o
      DEPENDS
-       ${OMPSS_MAIN_SOURCE} ${OMPSS_KERNEL_SOURCE} backend
+       ${OMPSS_MAIN_SOURCE} ${OMPSS_KERNEL_HEADER} backend
+     WORKING_DIRECTORY
+       ${PROJECT_SOURCE_DIR}
+  )
+
+  ## OMPSS KERNEL OBJECT
+  add_custom_command(
+     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o"
+     COMMAND
+       ${OMPSS_CXX} -I${PROJECT_SOURCE_DIR} ${OMPSS_KERNEL_SOURCE}
+       -c -o ${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o
+     DEPENDS
+       ${OMPSS_KERNEL_HEADER} ${OMPSS_KERNEL_SOURCE} backend
      WORKING_DIRECTORY
        ${PROJECT_SOURCE_DIR}
   )

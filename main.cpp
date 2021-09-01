@@ -32,7 +32,7 @@ int main(int nargs, char *args[]) {
   }
 
   // Read mesh data using C API call
-  read_data(args[1], 100, true);
+  read_data(args[1], 1000, true);
   int nnodes, ncells, npedges, ncolours, maxgsize;
   int *cgroup_offset, *cgroup, *triangles, *pedges;
   int *group_offset;
