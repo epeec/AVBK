@@ -9,8 +9,11 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set(HDF5_USE_STATIC_LIBRARIES TRUE)
 find_package (HDF5 1.8.11 COMPONENTS C REQUIRED)
 find_package (METIS REQUIRED)
-find_package(OpenMP)
 find_package(OmpSs)
+
+if (NOT OMPSS_FOUND)
+  find_package(OpenMP)
+endif()
 
 ## ASAN is disabled by default enable if needed but
 ## incompatible with OmpSs (use with care)
@@ -60,7 +63,7 @@ if(OMPSS_FOUND AND DISABLE_ASAN)
   ## OMPSS MAIN EXE
   add_custom_target( ompss_main ALL
      DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o" "${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o"
-     COMMAND ${OMPSS_CXX} ${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o ${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o
+     COMMAND ${OMPSS_CXX} -K --ompss-2 -Wno-deprecated-declarations ${CMAKE_CURRENT_BINARY_DIR}/ompss_main.o ${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o
              -o ${CMAKE_CURRENT_BINARY_DIR}/ompss_main
              -L${CMAKE_CURRENT_BINARY_DIR} -lbackend ${METIS_LIBRARY}
              ${HDF5_LIBRARIES} -l${CMAKE_DL_LIBS}
@@ -84,7 +87,7 @@ if(OMPSS_FOUND AND DISABLE_ASAN)
   add_custom_command(
      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o"
      COMMAND
-       ${OMPSS_CXX} -I${PROJECT_SOURCE_DIR} ${OMPSS_KERNEL_SOURCE}
+     ${OMPSS_CXX} -K --ompss-2 -Wno-deprecated-declarations -I${PROJECT_SOURCE_DIR} ${OMPSS_KERNEL_SOURCE}
        -c -o ${CMAKE_CURRENT_BINARY_DIR}/kernel_ompss.o
      DEPENDS
        ${OMPSS_KERNEL_HEADER} ${OMPSS_KERNEL_SOURCE} backend
@@ -92,4 +95,19 @@ if(OMPSS_FOUND AND DISABLE_ASAN)
        ${PROJECT_SOURCE_DIR}
   )
 
-endif ()
+else ()
+
+  add_executable(ompss_main
+     ompss_main.cpp kernel_ompss.cpp)
+
+  target_include_directories (ompss_main PUBLIC
+     ${HDF5_INCLUDE_DIR}
+     ${METIS_INCLUDE_DIR})
+
+  target_link_libraries (ompss_main PUBLIC
+     backend
+     ${HDF5_LIBRARIES}
+     ${METIS_LIBRARY}
+     ${CMAKE_DL_LIBS})
+
+endif()
