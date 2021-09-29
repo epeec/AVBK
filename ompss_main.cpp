@@ -39,7 +39,21 @@ int main(int nargs, char *args[]) {
   get_data_ptr(&nnodes, &ncells, &npedges, &ncolours, &maxgsize, &x, &y,
                &group_offset, &cgroup_offset, &cgroup, &triangles, &pedges);
 
-  // Clean up the memory
+  // Allocate data for kernel
+  double *vol_e = new double[ncells];
+  double *vol_n = new double[nnodes];
+
+  element_volumes_cgroup(nnodes, ncolours, maxgsize, group_offset, cgroup_offset,
+                         cgroup, x, y, triangles, vol_e, vol_n);
+
+#if 1
+  for (size_t i = 0; i < nnodes; ++i)
+    std::cout << "   (" << i << "): " << get_node_perm_value(i, vol_n) << ",\n";
+#endif
+
+//  // Clean up the memory
   free_data();
+  delete[] vol_n;
+  delete[] vol_e;
   return 0;
 }
