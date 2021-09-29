@@ -18,8 +18,18 @@ a new colouring algorithms to remove data dependency
 among groups and re-ordering of nodes/cells to have
 better memory access after colouring.
 
+Compile
+=======
 
-Contact:
+We use CMake for compiling the project and provide auto-install
+script `external/install.sh` to install external libraries.
+
+OmpSs and OpenMP must be detected automatically. In addtion,
+we auto detect ASAN in debug mode to help you with debugging
+those tough ones !
+
+
+Contact
 =======
 
 1) Pavanakumar Mohanamuraly
