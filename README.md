@@ -29,6 +29,11 @@ we auto detect ASAN in debug mode to help you with debugging
 those tough ones !
 
 
+Test
+====
+
+We supply a simple hip script to generate triangle mesh.
+
 Contact
 =======
 
